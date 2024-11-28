@@ -13,7 +13,7 @@ def predict_emotion(image, model):
 
     # Run the model on the image
     with torch.no_grad():
-        results = model(image)
+        results = model.predict(image)
     
     # Assuming the model's output is a tensor of predictions
     predicted_class = results[0].argmax(dim=1).item()  # Get the class with the highest score
