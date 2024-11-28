@@ -1,20 +1,25 @@
 import streamlit as st
-from PIL import Image
 from ultralytics import YOLO
+from PIL import Image
+
+model = YOLO("best_model.pt")  
+
+def predict_image(image):
+    results = model(image)
+
+    return results[0].plot()  
+
+st.title("YOLO Image Prediction")
 
 
-model = YOLO("best_model.pt")
-
-
-uploaded_file = st.file_uploader("Upload a face photo (PNG)", type=["png"])
+uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"])
 
 if uploaded_file is not None:
+
     image = Image.open(uploaded_file)
-    st.image(image, caption='Image', use_column_width=True)
-    
+    st.image(image, caption="Uploaded Image", use_column_width=True)
 
-    st.write("Emotion detection...")
-    results = model.predict(image)
+    st.subheader("Prediction Result:")
+    result_image = predict_image(image)
+    st.image(result_image, caption="Predicted Image with Bounding Boxes", use_column_width=True)
 
-    result_image = results[0].plot()  
-    st.image(result_image, caption='Result:', use_column_width=True)
